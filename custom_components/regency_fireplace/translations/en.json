@@ -1,0 +1,56 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Regency electric fireplace",
+        "description": "For fires with the EL1039 (RF290K) remote. Every command carries the fire's full state, so any ID can control the fire once paired. To keep the original remote working, enter the remote's own ID instead of pairing a new one.\n\nTo pair a new ID: after setup, hold the pinhole button on the fire's right-hand panel until it beeps 3 times, then press the Pair button within 10 seconds. The fire remembers one ID only, so pairing locks out the previous remote.",
+        "data": {
+          "name": "Name",
+          "transmitter": "Radio frequency transmitter",
+          "fire_id": "Fire ID (4 hex digits)",
+          "temperature_source": "Room temperature source"
+        },
+        "data_description": {
+          "transmitter": "433.92 MHz OOK transmitter, such as a Broadlink RM4 Pro.",
+          "fire_id": "A random ID is suggested. Enter the original remote's ID to share control with it.",
+          "temperature_source": "Optional. A temperature sensor or climate entity in the same room. The fire's thermostat works from this reading, so the heater is only available when a source is set."
+        }
+      }
+    },
+    "error": {
+      "invalid_fire_id": "Enter 4 hex digits, not 0000 or FFFF."
+    },
+    "abort": {
+      "already_configured": "A fireplace with this ID is already configured.",
+      "no_transmitters": "No radio frequency transmitters found. Set up a transmitter integration (such as Broadlink) first.",
+      "no_compatible_transmitters": "No transmitter supports 433.92 MHz OOK."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "temperature_source": "Room temperature source"
+        },
+        "data_description": {
+          "temperature_source": "Clear it to remove the heater entity."
+        }
+      }
+    }
+  },
+  "entity": {
+    "button": {
+      "pair": { "name": "Pair" }
+    },
+    "climate": {
+      "heater": { "name": "Heater" }
+    },
+    "light": {
+      "flame": { "name": "Flames" },
+      "fuel_bed": { "name": "Fuel bed" }
+    },
+    "switch": {
+      "power": { "name": "Power" }
+    }
+  }
+}

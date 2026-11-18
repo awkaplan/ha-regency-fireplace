@@ -1,0 +1,14 @@
+# Test configuration only; the integration itself has no Python dependencies
+# beyond Home Assistant.
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-p tests.ha_first"
+
+[tool.ruff]
+line-length = 110
+target-version = "py314"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "B", "UP", "SIM"]

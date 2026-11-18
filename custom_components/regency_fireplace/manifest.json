@@ -1,0 +1,14 @@
+{
+  "domain": "regency_fireplace",
+  "name": "Regency Electric Fireplace",
+  "categories": ["climate.thermostats_heating"],
+  "codeowners": ["@awkaplan"],
+  "config_flow": true,
+  "dependencies": ["radio_frequency"],
+  "documentation": "https://github.com/awkaplan/ha-regency-fireplace",
+  "integration_type": "device",
+  "iot_class": "assumed_state",
+  "issue_tracker": "https://github.com/awkaplan/ha-regency-fireplace/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}
