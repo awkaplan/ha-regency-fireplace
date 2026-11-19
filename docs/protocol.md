@@ -33,14 +33,14 @@ There are 80 bits, MSB first:
 | ID | 16 | Handset ID. The fire obeys exactly one ID (see Pairing). |
 | S0 | bit 7 | **Flag.** Required on the pairing packet. Flagged packets never switch the fire on or off; the handset sets this bit on its periodic re-broadcasts. |
 | S0 | bit 6 | Power: on / standby |
-| S0 | bits 5–3 | Flame setting: `001` = flame on. Off is assumed to be `000` (see Unverified). |
+| S0 | bits 5–3 | Flame setting: `001` = flame on, `000` = flame off |
 | S0 | bits 2–0 | Flame brightness, 1–5 |
 | S1 | bits 7–5 | Fuel bed brightness, 1–5 |
-| S1 | bits 4–0 | Fuel bed setting: 1–14 are colours; 0 is assumed to be off |
-| S2 | bits 7–4 | Timer step (`F` while running). Not used by this integration. |
+| S1 | bits 4–0 | Fuel bed setting: `0` = off, `1`–`14` = colours (→ steps 0, 1 … 14, then wraps to 0) |
+| S2 | bits 7–4 | Timer: `0` off, `1` = 0.5 h, `2`–`11` = 1–10 h; `F` in the handset's re-broadcasts while it runs. Not used by this integration. |
 | S2 | bit 2 | Heating enabled |
 | S3 | – | Always `00` |
-| S4 | 8 | Heating setpoint, whole °C |
+| S4 | 8 | Heating setpoint, whole °C, 5–40 (the handset's limits) |
 | S5 | 8 | Room temperature, whole °C, from the handset's own sensor |
 | CHK | 8 | `(sum of the 8 bytes before it + 0x55) & 0xFF` |
 | ~CHK | 8 | Bitwise complement of CHK |
@@ -72,11 +72,11 @@ Behaviour observed:
 - **The handset's own reset button** (under the back cover, hold 3 s) can make it choose a new ID.
 - **Handset IDs survive battery changes.**
 
+## °C / °F
+
+Switching the handset's display to °F doesn't change any packet field. Temperatures are always sent in whole °C.
+
 ## Unverified
 
-These are inferred and have not yet been captured from the handset:
-
-- The encodings for **flame off** (S0 bits 5–3 = `000`) and **fuel bed off** (S1 setting `0`).
-- The names of the 14 **fuel bed colour** settings; the integration calls them "Setting 1" to "Setting 14".
-- The **setpoint range**. 19–23 °C has been observed; the integration allows 15–30 °C.
-- **Timer step** meanings (the manual says 0.5 h, 1 h, then hourly to 10 h) and how the timer counts down.
+- **The names of the 14 fuel bed colours.** The integration calls them "Setting 1" to "Setting 14".
+- **How the fire handles the timer,** for example whether re-sending a timer step restarts the countdown. That's why the integration leaves the timer to Home Assistant automations.

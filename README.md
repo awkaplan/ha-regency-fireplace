@@ -62,7 +62,7 @@ Because radio is one-way, Home Assistant only knows what it last sent. A button 
 | `switch.<name>_power` | On / standby, like the remote's POWER button. Standby keeps every setting. |
 | `light.<name>_flames` | Flame effect on/off, brightness in 5 steps. |
 | `light.<name>_fuel_bed` | Fuel bed on/off, brightness in 5 steps, colour as an effect ("Setting 1" to "Setting 14"). |
-| `climate.<name>_heater` | Off / Heat with a setpoint in whole °C (15–30). Only present with a temperature source. |
+| `climate.<name>_heater` | Off / Heat with a setpoint in whole °C (5–40, the remote's range). Only present with a temperature source. |
 | `button.<name>_pair` | Sends the pairing packet (configuration entity). |
 
 Turning on a light or the heater also takes the fire out of standby. Turning off the last thing that's on puts the fire into standby and remembers that setting, so **Power** brings it back.
@@ -81,9 +81,6 @@ If Home Assistant itself stops while heating, the fire keeps working from the la
 
 - **No timer.** Use a Home Assistant automation instead.
 - **Fuel bed colours have no names.** The 14 colour settings are listed by number.
-- **Not yet captured from the remote,** so these are best guesses (see [docs/protocol.md](docs/protocol.md)):
-  - the flame-off and fuel-bed-off encodings
-  - the setpoint range
 - **State is assumed** (`assumed_state`), since radio is one-way.
 
 ## How it works

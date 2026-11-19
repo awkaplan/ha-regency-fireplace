@@ -27,9 +27,27 @@ def test_packets_match_captures(fire_id, state, flag, expected) -> None:
     assert build_packet(fire_id, state, flag).hex(" ") == expected
 
 
-def test_heat_bit() -> None:
-    """Heating sets S2 bit 2 (captures/heat: 00 -> 04)."""
-    assert FireplaceState(heat=True).state_bytes()[2] == 0x04
+# S0..S5 captured from the handset while stepping through every setting
+# (flame off, fuel bed 0-14, fuel brightness, setpoint 5-40, heating on/off).
+CAPTURED_STATE = [
+    (FireplaceState(True, True, 5, 0, 5, False, 20, 22), False, "4d a0 00 00 14 16"),
+    (FireplaceState(True, False, 5, 0, 5, False, 20, 22), False, "45 a0 00 00 14 16"),  # flame off
+    (FireplaceState(True, False, 5, 1, 5, False, 20, 22), False, "45 a1 00 00 14 16"),
+    (FireplaceState(True, False, 5, 14, 5, False, 20, 22), False, "45 ae 00 00 14 16"),
+    (FireplaceState(True, False, 5, 0, 3, False, 20, 23), False, "45 60 00 00 14 17"),
+    (FireplaceState(True, False, 5, 0, 1, False, 20, 23), False, "45 20 00 00 14 17"),  # fuel bed off
+    (FireplaceState(True, False, 5, 0, 1, True, 20, 23), False, "45 20 04 00 14 17"),  # heating on
+    (FireplaceState(True, False, 5, 0, 1, True, 40, 23), False, "45 20 04 00 28 17"),  # max setpoint
+    (FireplaceState(True, False, 5, 0, 1, True, 5, 23), False, "45 20 04 00 05 17"),  # min setpoint
+    (FireplaceState(False, False, 5, 0, 1, False, 5, 23), True, "85 20 00 00 05 17"),
+    (FireplaceState(True, True, 5, 0, 1, False, 5, 23), True, "cd 20 00 00 05 17"),
+]
+
+
+@pytest.mark.parametrize(("state", "flag", "expected"), CAPTURED_STATE)
+def test_state_bytes_match_captures(state, flag, expected) -> None:
+    """S0..S5 byte-exact against the handset."""
+    assert state.state_bytes(flag).hex(" ") == expected
 
 
 def _decode(timings: list[int]) -> list[bytes]:
@@ -63,7 +81,13 @@ def test_burst_shape() -> None:
 
 @pytest.mark.parametrize(
     "bad",
-    [{"flame_brightness": 0}, {"fuel_brightness": 6}, {"fuel_setting": 15}, {"setpoint": 40}],
+    [
+        {"flame_brightness": 0},
+        {"fuel_brightness": 6},
+        {"fuel_setting": 15},
+        {"setpoint": 4},
+        {"setpoint": 41},
+    ],
 )
 def test_out_of_range_rejected(bad) -> None:
     """A bad value can never reach the fire."""

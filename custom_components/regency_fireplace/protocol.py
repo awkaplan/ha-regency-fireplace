@@ -16,7 +16,7 @@ the fire should be", never "press this button".
         bits 2-0 flame brightness 1-5
     S1  bits 7-5 fuel bed brightness 1-5
         bits 4-0 fuel bed setting (0 = off, 1-14 = colour settings)
-    S2  bits 7-4 timer step (not used here)
+    S2  bits 7-4 timer: 0 off, 1 = 0.5 h, 2-11 = 1-10 h, F running (not used here)
         bit 2    heating enabled
     S3  0x00
     S4  heating setpoint, whole deg C
@@ -41,7 +41,7 @@ PACKETS_PER_BURST = 3
 
 BRIGHTNESS_MIN, BRIGHTNESS_MAX = 1, 5
 FUEL_SETTINGS = 14  # colour settings 1..14; 0 is off
-SETPOINT_MIN, SETPOINT_MAX = 15, 30  # deg C; observed range 19-23, wider is unverified
+SETPOINT_MIN, SETPOINT_MAX = 5, 40  # deg C; the handset's own limits
 ROOM_TEMP_DEFAULT = 20  # deg C, sent while no temperature source is configured
 
 
