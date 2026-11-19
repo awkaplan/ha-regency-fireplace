@@ -46,7 +46,7 @@ class FireplaceHeater(FireplaceEntity, ClimateEntity):
         | ClimateEntityFeature.TURN_ON
         | ClimateEntityFeature.TURN_OFF
     )
-    _attr_temperature_unit = UnitOfTemperature.CELSIUS
+    _attr_native_temperature_unit = UnitOfTemperature.CELSIUS
     _attr_target_temperature_step = 1
     _attr_precision = PRECISION_TENTHS  # source reading; the setpoint step stays 1
     _attr_min_temp = SETPOINT_MIN
@@ -59,12 +59,12 @@ class FireplaceHeater(FireplaceEntity, ClimateEntity):
         return HVACMode.HEAT if on else HVACMode.OFF
 
     @property
-    def target_temperature(self) -> float:
+    def native_target_temperature(self) -> float:
         """Return the setpoint."""
         return self.controller.state.setpoint
 
     @property
-    def current_temperature(self) -> float | None:
+    def native_current_temperature(self) -> float | None:
         """Return the temperature source's reading."""
         return self.controller.source_temperature
 
